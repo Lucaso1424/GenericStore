@@ -12,10 +12,12 @@ namespace GenericStore.Api.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService orderService;
+        private readonly IOrderDetailService orderDetailService;
         private readonly IMapper mapper;
-        public OrderController(IOrderService orderService, IMapper mapper)
+        public OrderController(IOrderService orderService, IOrderDetailService orderDetailService, IMapper mapper)
         {
             this.orderService = orderService;
+            this.orderDetailService = orderDetailService;
             this.mapper = mapper;
         }
 
@@ -35,7 +37,7 @@ namespace GenericStore.Api.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<OrderDTO>> GetByIdAsync(int id)
+        public async Task<ActionResult<OrderDTO>> GetOrderByIdAsync(int id)
         {
             var order = await orderService.GetOrderByIdAsync(id);
 
@@ -46,6 +48,20 @@ namespace GenericStore.Api.Controllers
 
             var orderDTO = mapper.Map<OrderDTO>(order);
             return Ok(orderDTO);
+        }
+
+        [HttpGet("GetOrderDetail/{id}")]
+        public async Task<ActionResult<OrderDTO>> GetOrderDetailByIdAsync(int id)
+        {
+            var orderDetail = await orderDetailService.GetOrderDetailByIdAsync(id);
+
+            if (orderDetail == null)
+            {
+                return NotFound();
+            }
+
+            var orderDetailDTO = mapper.Map<OrderDetailDTO>(orderDetail);
+            return Ok(orderDetailDTO);
         }
 
         [HttpPost]

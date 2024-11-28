@@ -4,7 +4,7 @@ using GenericStore.Domain.Entities;
 
 namespace GenericStore.Application.Interfaces;
 
-public interface IOrderService : IGenericService<Order, OrderDTO>
+public interface IOrderDetailService : IGenericService<OrderDetail, OrderDetailDTO>
 {
-    Task<Order?> GetOrderByIdAsync(int id);
+    Task<OrderDetail?> GetOrderDetailByIdAsync(int id);
 }
