@@ -1,0 +1,6 @@
+@GenericStore_HostAddress = http://localhost:5003
+
+GET {{GenericStore_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
