@@ -31,13 +31,21 @@ public class GenericService<TContext, TEntity, TEntityDTO> : GenericServiceBase<
 
     public async Task UpdateAsync(int id, BaseEntityDTO dto)
     {
-        EntityState entityState = (EntityState)Enum.Parse(typeof(EntityState), dto.TrackingState.ToString());
-        var entity = _mapper.Map<TEntity>(dto);
+        if (Enum.TryParse(dto.TrackingState.ToString(), out EntityState entityState))
+        {
+            var entity = _mapper.Map<TEntity>(dto);
 
-        if (entityState != EntityState.Unchanged)
-            _context.Set<TEntity>().Entry(entity).State = entityState;
-
-        await _context.SaveChangesAsync();
+            if (entity != null && entityState != EntityState.Unchanged)
+            {
+                _context.Set<TEntity>().Attach(entity);
+                _context.Entry(entity).State = entityState;
+                await _context.SaveChangesAsync();
+            }
+        }
+        else
+        {
+            throw new ArgumentException("Invalid TrackingState value");
+        }
     }
 
     public async Task DeleteAsync(int id)

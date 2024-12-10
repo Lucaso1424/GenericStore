@@ -19,9 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Application", "Core.Ap
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IdentityService", "IdentityService", "{08470156-CAEE-44D2-B14C-A0A776623C93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericStore.Identity.Api", "GenericStore.Identity.Api\GenericStore.Identity.Api.csproj", "{B7C4284C-4313-4667-8E78-0A3D18B3991B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GenericStore.Identity.Api", "GenericStore.Identity.Api\GenericStore.Identity.Api.csproj", "{B7C4284C-4313-4667-8E78-0A3D18B3991B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.CrossCutting", "Core.CrossCutting\Core.CrossCutting.csproj", "{D14D059B-C845-4AF8-BF70-EA28FDA6CCBE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.CrossCutting", "Core.CrossCutting\Core.CrossCutting.csproj", "{D14D059B-C845-4AF8-BF70-EA28FDA6CCBE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{AB296D36-3B58-4874-BEE4-4AC9A5839974}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericStore.Tests", "GenericStore.Test\GenericStore.Tests.csproj", "{63EBCAB3-6AE1-4B7C-BC30-BA42702C1968}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +61,10 @@ Global
 		{D14D059B-C845-4AF8-BF70-EA28FDA6CCBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D14D059B-C845-4AF8-BF70-EA28FDA6CCBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D14D059B-C845-4AF8-BF70-EA28FDA6CCBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63EBCAB3-6AE1-4B7C-BC30-BA42702C1968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63EBCAB3-6AE1-4B7C-BC30-BA42702C1968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63EBCAB3-6AE1-4B7C-BC30-BA42702C1968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63EBCAB3-6AE1-4B7C-BC30-BA42702C1968}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,6 +77,7 @@ Global
 		{697CEDA7-5CF5-4CE0-BC49-63E195D9248C} = {2D65FEBD-EB2F-4BB8-9819-26C018E119CB}
 		{B7C4284C-4313-4667-8E78-0A3D18B3991B} = {08470156-CAEE-44D2-B14C-A0A776623C93}
 		{D14D059B-C845-4AF8-BF70-EA28FDA6CCBE} = {2D65FEBD-EB2F-4BB8-9819-26C018E119CB}
+		{63EBCAB3-6AE1-4B7C-BC30-BA42702C1968} = {AB296D36-3B58-4874-BEE4-4AC9A5839974}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68D80A49-278F-484B-A165-CA42C423F5C2}
