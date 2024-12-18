@@ -11,6 +11,6 @@ namespace GenericStore.Application.Interfaces
 {
     public interface IStoreProductService : IGenericService<StoreProduct, StoreProductDTO>
     {
-        Task<StoreProductDTO> GetByIdAsync();
+        Task<StoreProduct?> GetByIdAsync(int id);
     }
 }

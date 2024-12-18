@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using Core.Application.Services;
 using GenericStore.Application.DTOs;
+using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
 using GenericStore.Infrastructure.UnitOfWork;
 
 namespace GenericStore.Application.Services;
-public class StoreProductService : GenericService<GenericStoreContext, StoreProduct, StoreProductDTO>
+public class StoreProductService : GenericService<GenericStoreContext, StoreProduct, StoreProductDTO>, IStoreProductService
 {
     public StoreProductService(GenericStoreContext context, IMapper mapper) : base(context, mapper)
     {
