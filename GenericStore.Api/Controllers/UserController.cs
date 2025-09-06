@@ -35,6 +35,11 @@ namespace GenericStore.Identity.Api.Controllers
             }
 
             var usersDTO = mapper.Map<IEnumerable<UserDTO>>(users);
+            foreach (var userDTO in usersDTO)
+            {
+                RoleId roleId = (RoleId)Enum.Parse(typeof(RoleId), userDTO.RoleId.ToString());
+                userDTO.RoleDisplayName = roleId.ToString();
+            }
             return Ok(usersDTO);
         }
 

@@ -20,6 +20,4 @@ public partial class ProductDTO : BaseEntityDTO
     public int? CategoryId { get; set; }
 
     public DateTime CreatedDate { get; set; }
-
-    public virtual StoreProductDTO StoreProduct { get; set; }
 }
