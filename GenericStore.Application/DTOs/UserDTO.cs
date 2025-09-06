@@ -16,8 +16,4 @@ public partial class UserDTO : BaseEntityDTO
     public int RoleId { get; set; }
 
     public string? RoleDisplayName { get; set; }
-
-    public virtual ICollection<OrderDTO>? Orders { get; set; } = new List<OrderDTO>();
-
-    public virtual Role Role { get; set; }
 }
