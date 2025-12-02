@@ -3,6 +3,7 @@ using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.WebSockets;
 
 namespace GenericStore.Api.Controllers
 {
@@ -72,7 +73,7 @@ namespace GenericStore.Api.Controllers
 
             try
             {
-                await _service.UpdateAsync(id, productDTO);
+                await _service.UpdateAsync(productDTO);
                 return NoContent();
             }
             catch (Exception ex)

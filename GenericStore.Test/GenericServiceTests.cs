@@ -41,6 +41,20 @@ public class GenericServiceTests
     }
 
     [Fact]
+    public async Task GetAllAsync_ShouldReturnEmptyList_WhenNoEntities()
+    {
+        // Arrange
+        var data = new List<TestEntity>();
+        _mockContext.Setup(c => c.Set<TestEntity>()).ReturnsDbSet(data);
+
+        // Act
+        var result = await _service.GetAllAsync();
+
+        // Assert
+        Assert.Empty(result);
+    }
+
+    [Fact]
     public async Task CreateAsync_ShouldAddEntity()
     {
         // Arrange
@@ -60,7 +74,7 @@ public class GenericServiceTests
     public async Task UpdateAsync_ShouldUpdateEntity()
     {
         // Arrange
-        var dto = new TestEntityDTO { TrackingState = "Modified" };
+        var dto = new TestEntityDTO { TrackingState = "Modified", Id = 1 };
         var entity = new TestEntity();
 
         _mockMapper.Setup(m => m.Map<TestEntity>(It.IsAny<TestEntityDTO>())).Returns(entity);
@@ -70,7 +84,7 @@ public class GenericServiceTests
         _mockContext.Setup(c => c.Set<TestEntity>()).Returns(dbSetMock.Object);
 
         // Act
-        await _service.UpdateAsync(1, dto);
+        await _service.UpdateAsync(dto);
 
         // Assert
         _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once);
@@ -98,4 +112,15 @@ public class GenericServiceTests
 
 public class TestEntity { }
 
-public class TestEntityDTO : BaseEntityDTO { }
+public class TestEntityDTO : BaseEntityDTO 
+{
+    private int id { get; set; }
+    public int Id 
+    { 
+        get => id; 
+        set 
+        { 
+            id = value; 
+        }
+    }
+}
