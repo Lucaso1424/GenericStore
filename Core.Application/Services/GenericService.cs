@@ -22,23 +22,32 @@ public class GenericService<TContext, TEntity, TEntityDTO> : GenericServiceBase<
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(int id, BaseEntityDTO dto)
+    public async Task UpdateAsync(BaseEntityDTO dto)
     {
-        if (Enum.TryParse(dto.TrackingState.ToString(), out EntityState entityState))
-        {
-            var entity = _mapper.Map<TEntity>(dto);
+        if (!Enum.TryParse(dto.TrackingState.ToString(), out EntityState entityState))
+            throw new ArgumentException("Invalid TrackingState value");
 
-            if (entity != null && entityState != EntityState.Unchanged)
-            {
+        var entity = _mapper.Map<TEntity>(dto);
+        if (entity == null || entityState == EntityState.Unchanged) return;
+
+        switch (entityState)
+        {
+            case EntityState.Added:
+                _context.Set<TEntity>().Add(entity);
+                break;
+            case EntityState.Modified:
+                _context.Set<TEntity>().Update(entity);
+                break;
+            case EntityState.Deleted:
+                _context.Set<TEntity>().Remove(entity);
+                break;
+            default:
                 _context.Set<TEntity>().Attach(entity);
                 _context.Entry(entity).State = entityState;
-                await _context.SaveChangesAsync();
-            }
+                break;
         }
-        else
-        {
-            throw new ArgumentException("Invalid TrackingState value");
-        }
+
+        await _context.SaveChangesAsync();
     }
 
     public async Task DeleteAsync(int id)

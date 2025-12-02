@@ -73,7 +73,7 @@ namespace GenericStore.Api.Controllers
 
             try
             {
-                await _categoryService.UpdateAsync(id, categoryDTO);
+                await _categoryService.UpdateAsync(categoryDTO);
                 return NoContent();
             }
             catch (Exception ex)

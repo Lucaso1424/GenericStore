@@ -72,7 +72,7 @@ namespace GenericStore.Api.Controllers
                 {
                     return BadRequest();
                 }
-                await storeService.UpdateAsync(id, storeDTO);
+                await storeService.UpdateAsync(storeDTO);
                 return NoContent();
             }
             catch (Exception ex)

@@ -88,7 +88,7 @@ namespace GenericStore.Api.Controllers
                 {
                     return BadRequest();
                 }
-                await orderService.UpdateAsync(id, orderDTO);
+                await orderService.UpdateAsync(orderDTO);
                 return NoContent();
             }
             catch (Exception ex)

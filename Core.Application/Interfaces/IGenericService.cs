@@ -14,6 +14,6 @@ public interface IGenericService<TEntity, TEntityDTO>
 {
     Task<IEnumerable<TEntity?>> GetAllAsync();
     Task CreateAsync(TEntity entity);
-    Task UpdateAsync(int id, BaseEntityDTO entity);
+    Task UpdateAsync(BaseEntityDTO entity);
     Task DeleteAsync(int id);
 }
