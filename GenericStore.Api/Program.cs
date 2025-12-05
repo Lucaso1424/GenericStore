@@ -1,5 +1,3 @@
-using Core.Application.Interfaces;
-using Core.Application.Services;
 using GenericStore.Application.Interfaces;
 using GenericStore.Application.Mappings;
 using GenericStore.Application.Services;
@@ -31,7 +29,7 @@ builder.Services.AddDbContext<GenericStoreContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(typeof(MappingProfile)); 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
