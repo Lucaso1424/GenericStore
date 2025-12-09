@@ -31,6 +31,10 @@ public partial class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired()
             .HasMaxLength(50)
             .IsUnicode(false);
+        entity.Property(e => e.PasswordHash)
+            .IsRequired()
+            .HasMaxLength(100)
+            .IsUnicode(false);
 
         entity.HasOne(d => d.Role).WithMany(p => p.Users)
             .HasForeignKey(d => d.RoleId)

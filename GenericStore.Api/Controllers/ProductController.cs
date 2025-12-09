@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net.WebSockets;
@@ -9,6 +10,7 @@ namespace GenericStore.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ProductController : ControllerBase
     {
         private readonly IProductService _service;
