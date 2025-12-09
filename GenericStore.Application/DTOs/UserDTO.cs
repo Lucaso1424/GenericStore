@@ -13,6 +13,8 @@ public partial class UserDTO : BaseEntityDTO
 
     public string Email { get; set; }
 
+    public string Password { get; set; }
+
     public int RoleId { get; set; }
 
     public string? RoleDisplayName { get; set; }

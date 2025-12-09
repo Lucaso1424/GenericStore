@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
-VisualStudioVersion = 18.0.11222.15 d18.0
+VisualStudioVersion = 18.0.11222.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GenericStoreServices", "GenericStoreServices", "{0DBB9A65-2172-4CE9-9B96-90576BE5A90F}"
 EndProject
@@ -34,6 +34,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericStore.Domain.Tests", "GenericStore.Domain.Tests\GenericStore.Domain.Tests.csproj", "{630A808F-81AA-4877-B735-548681CE0E7D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericStore.Integration.Tests", "GenericStore.Integration.Tests\GenericStore.Integration.Tests.csproj", "{569CA901-3031-4741-81DB-ABBF494D3641}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenericStore.Identity.Application", "GenericStore.Identity.Application\GenericStore.Identity.Application.csproj", "{95B7A6DA-C220-45A6-9526-DBE48658D0A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{569CA901-3031-4741-81DB-ABBF494D3641}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{569CA901-3031-4741-81DB-ABBF494D3641}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{569CA901-3031-4741-81DB-ABBF494D3641}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95B7A6DA-C220-45A6-9526-DBE48658D0A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95B7A6DA-C220-45A6-9526-DBE48658D0A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95B7A6DA-C220-45A6-9526-DBE48658D0A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95B7A6DA-C220-45A6-9526-DBE48658D0A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{53554DA9-6C36-4F7B-933E-EDD0AB4AB430} = {AB296D36-3B58-4874-BEE4-4AC9A5839974}
 		{630A808F-81AA-4877-B735-548681CE0E7D} = {AB296D36-3B58-4874-BEE4-4AC9A5839974}
 		{569CA901-3031-4741-81DB-ABBF494D3641} = {AB296D36-3B58-4874-BEE4-4AC9A5839974}
+		{95B7A6DA-C220-45A6-9526-DBE48658D0A5} = {08470156-CAEE-44D2-B14C-A0A776623C93}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68D80A49-278F-484B-A165-CA42C423F5C2}

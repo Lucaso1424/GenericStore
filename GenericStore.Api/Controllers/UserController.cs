@@ -4,6 +4,7 @@ using GenericStore.Application.Interfaces;
 using GenericStore.Application.Services;
 using GenericStore.Domain.Entities;
 using GenericStore.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,6 +12,7 @@ namespace GenericStore.Identity.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IHttpContextAccessor _contextAccessor;
