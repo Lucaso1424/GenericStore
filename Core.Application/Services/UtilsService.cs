@@ -1,4 +1,5 @@
 ﻿using GenericStore.Domain.Entities;
+using GenericStore.Domain.Enums;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -32,13 +33,17 @@ namespace Core.Application.Services
 
         public string GenerateJwtToken(User user)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 new Claim(ClaimTypes.Name, user.Name),
                 new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("scope", "api.read")
             };
+
+            if (user.RoleId == (int)RoleId.Admin) 
+                claims.Add(new Claim("scope", "api.write"));
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);

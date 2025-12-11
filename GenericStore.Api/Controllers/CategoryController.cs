@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,6 +9,7 @@ namespace GenericStore.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CategoryController : ControllerBase
     {
         private readonly IHttpContextAccessor _contextAccessor;
@@ -20,6 +22,7 @@ namespace GenericStore.Api.Controllers
             _mapping = mapping;
         }
 
+        [Authorize(Policy = "Api.Read")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetAllAsync()
         {
@@ -34,6 +37,7 @@ namespace GenericStore.Api.Controllers
             return Ok(categoriesDTO);
         }
 
+        [Authorize(Policy = "Api.Read")]
         [HttpGet("{id}")]
         public async Task<ActionResult<CategoryDTO>> GetByIdAsync(int id)
         {
@@ -48,6 +52,7 @@ namespace GenericStore.Api.Controllers
             return Ok(categoryDTO);
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] CategoryDTO categoryDTO)
         {
@@ -63,6 +68,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromQuery] CategoryDTO categoryDTO)
         {
@@ -82,6 +88,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {

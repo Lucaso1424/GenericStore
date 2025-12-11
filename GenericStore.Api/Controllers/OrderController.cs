@@ -2,6 +2,7 @@
 using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace GenericStore.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService orderService;
@@ -21,6 +23,7 @@ namespace GenericStore.Api.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Policy = "Api.Read")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<OrderDTO>>> GetAllAsync()
         {
@@ -35,7 +38,7 @@ namespace GenericStore.Api.Controllers
             return Ok(ordersDTO);
         }
 
-
+        [Authorize(Policy = "Api.Read")]
         [HttpGet("{id}")]
         public async Task<ActionResult<OrderDTO>> GetOrderByIdAsync(int id)
         {
@@ -50,6 +53,7 @@ namespace GenericStore.Api.Controllers
             return Ok(orderDTO);
         }
 
+        [Authorize(Policy = "Api.Read")]
         [HttpGet("GetOrderDetail/{id}")]
         public async Task<ActionResult<OrderDTO>> GetOrderDetailByIdAsync(int id)
         {
@@ -64,6 +68,7 @@ namespace GenericStore.Api.Controllers
             return Ok(orderDetailDTO);
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] OrderDTO orderDTO)
         {
@@ -79,6 +84,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromBody] OrderDTO orderDTO, int id)
         {
@@ -97,6 +103,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id) 
         {

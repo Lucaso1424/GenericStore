@@ -2,6 +2,7 @@
 using GenericStore.Application.DTOs;
 using GenericStore.Domain.Entities;
 using GenericStore.Identity.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenericStore.Identity.Api.Controllers
@@ -16,6 +17,7 @@ namespace GenericStore.Identity.Api.Controllers
             _authService = authService;
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPost("RegisterUser")]
         public async Task<ActionResult> RegisterUserAsync([FromBody] UserDTO userDTO)
         {

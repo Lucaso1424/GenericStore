@@ -2,6 +2,7 @@
 using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace GenericStore.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class StoreProductController : ControllerBase
     {
         private readonly IStoreProductService storeProductService;
@@ -19,6 +21,7 @@ namespace GenericStore.Api.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Policy = "Api.Read")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<StoreProductDTO>>> GetAllAsync()
         {
@@ -33,6 +36,7 @@ namespace GenericStore.Api.Controllers
             return Ok(storeProductsDTO);
         }
 
+        [Authorize(Policy = "Api.Read")]
         [HttpGet("{id}")]
         public async Task<ActionResult<StoreProductDTO>> GetByIdAsync(int id)
         {
@@ -48,6 +52,7 @@ namespace GenericStore.Api.Controllers
             return Ok(storeProductDTO);
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] StoreProductDTO storeProductDTO)
         {
@@ -69,6 +74,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromQuery] StoreProductDTO storeProductDTO)
         {

@@ -22,6 +22,7 @@ namespace GenericStore.Api.Controllers
             _mapping = mapper;
         }
 
+        [Authorize(Policy = "Api.Read")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDTO>>> GetAllAsync()
         {
@@ -36,6 +37,7 @@ namespace GenericStore.Api.Controllers
             return Ok(productsDTO);
         }
 
+        [Authorize(Policy = "Api.Read")]
         [HttpGet("{id}")]
         public async Task<ActionResult<ProductDTO>> GetByIdAsync(int id)
         {
@@ -50,6 +52,7 @@ namespace GenericStore.Api.Controllers
             return Ok(productDTO);
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] ProductDTO productDTO)
         {
@@ -65,6 +68,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromQuery] ProductDTO productDTO)
         {
@@ -84,6 +88,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {

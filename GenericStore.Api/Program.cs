@@ -60,6 +60,18 @@ builder.Services.AddAuthentication(config =>
     };
 });
 
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("Api.Read", policy =>
+    {
+        policy.RequireClaim("scope", "api.read");
+        policy.RequireAuthenticatedUser();
+    })
+    .AddPolicy("Api.Write", policy =>
+    {
+        policy.RequireClaim("scope", "api.write");
+        policy.RequireAuthenticatedUser();
+    });
+
 var app = builder.Build();
 
 

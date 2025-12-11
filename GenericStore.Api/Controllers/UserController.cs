@@ -26,6 +26,7 @@ namespace GenericStore.Identity.Api.Controllers
             this.mapper = mapper;
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllAsync()
         {
@@ -45,7 +46,7 @@ namespace GenericStore.Identity.Api.Controllers
             return Ok(usersDTO);
         }
 
-
+        [Authorize(Policy = "Api.Write")]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDTO>> GetByIdAsync(int id)
         {
@@ -62,6 +63,7 @@ namespace GenericStore.Identity.Api.Controllers
             return Ok(userDTO);
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] UserDTO userDTO)
         {
@@ -77,6 +79,7 @@ namespace GenericStore.Identity.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromBody] UserDTO userDTO, int id)
         {
@@ -95,6 +98,7 @@ namespace GenericStore.Identity.Api.Controllers
             }
         }
 
+        [Authorize(Policy = "Api.Write")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {

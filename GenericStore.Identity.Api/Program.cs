@@ -47,6 +47,13 @@ builder.Services.AddAuthentication(config =>
     };
 });
 
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("Api.Write", policy =>
+    {
+        policy.RequireClaim("scope", "api.write");
+        policy.RequireAuthenticatedUser();
+    });
+
 // Configuración de autenticación de Azure AD (para Microsoft Entra ID)
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
