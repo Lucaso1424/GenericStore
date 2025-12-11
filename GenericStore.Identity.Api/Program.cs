@@ -25,7 +25,6 @@ builder.Services.AddDbContext<GenericStoreContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddSingleton<UtilsService>();
-
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddAuthentication(config =>
@@ -51,6 +50,15 @@ builder.Services.AddAuthentication(config =>
 // Configuración de autenticación de Azure AD (para Microsoft Entra ID)
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
+
+//builder.Services.AddAuthentication()
+//    .AddOpenIdConnect("aad", options =>
+//    {
+//        options.Authority = $"https://login.microsoftonline.com/{tenantId}/v2.0";
+//        options.ClientId = clientId;
+//        options.ClientSecret = clientSecret;
+//        options.ResponseType = "code";
+//    });
 
 var app = builder.Build();
 

@@ -19,7 +19,7 @@ namespace GenericStore.Identity.Api.Controllers
         [HttpPost("RegisterUser")]
         public async Task<ActionResult> RegisterUserAsync([FromBody] UserDTO userDTO)
         {
-            await _authService.RegisterUserAsync(userDTO);
+            await _authService.RegisterNewUserAsync(userDTO);
             return Ok();
         }
 

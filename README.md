@@ -37,9 +37,8 @@ Restore packages and build the solution.
 Running Tests
 Run all tests to verify functionality:
 
-bash
-Copiar código
 dotnet test
+
 How to Contribute
 Create a feature or bug-fix branch: feature/xyz or bugfix/xyz
 

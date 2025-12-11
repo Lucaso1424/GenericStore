@@ -8,7 +8,7 @@ namespace GenericStore.Identity.Application.Interfaces
 {
     public interface IAuthenticationService
     {
-        Task RegisterUserAsync(UserDTO userDTO);
+        Task RegisterNewUserAsync(UserDTO userDTO);
 
         Task<string> LoginAsync(string email, string password);
     }

@@ -17,7 +17,7 @@ namespace GenericStore.Identity.Application.Services
             _context = context;
         }
 
-        public async Task RegisterUserAsync(UserDTO userDTO)
+        public async Task RegisterNewUserAsync(UserDTO userDTO)
         {
             var user = new User
             {
