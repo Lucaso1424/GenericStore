@@ -4,28 +4,25 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GenericStore.Infrastructure.Configurations;
 
-public partial class StoreProductConfiguration : IEntityTypeConfiguration<StoreProduct>
+public class StoreProductConfiguration : IEntityTypeConfiguration<StoreProduct>
 {
     public void Configure(EntityTypeBuilder<StoreProduct> entity)
     {
-        entity.HasKey(e => e.StoreProductId).HasName("PK_StoreProduct_Id");
+        entity.HasKey(e => e.StoreProductId);
 
-        entity.ToTable("StoreProduct");
-        entity.Property(e => e.MinimumStock).HasColumnType("int");
-        entity.Property(e => e.Stock).HasColumnType("int");
-        entity.Property(e => e.StoreId).HasColumnType("int");
-        entity.Property(e => e.ProductId).HasColumnType("int");
-        entity.HasOne(d => d.Store).WithMany(d => d.StoreProducts)
+        entity.ToTable("store_products");
+
+        entity.Property(e => e.Stock).IsRequired();
+        entity.Property(e => e.MinimumStock).IsRequired();
+
+        entity.HasOne(d => d.Store)
+            .WithMany(p => p.StoreProducts)
             .HasForeignKey(d => d.StoreId)
-            .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName("FK_StoreProduct_Store");
+            .OnDelete(DeleteBehavior.Cascade);
 
-        entity.HasOne(d => d.Product).WithOne(d=> d.StoreProduct)
-            .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName("FK_StoreProduct_Product");
-
-        OnConfigurePartial(entity);
+        entity.HasOne(d => d.Product)
+            .WithOne(p => p.StoreProduct)
+            .HasForeignKey<StoreProduct>(d => d.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<StoreProduct> entity);
 }

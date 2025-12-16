@@ -26,10 +26,20 @@ builder.Services.AddCors(options =>
     });
 });
 
-var connectionString = builder.Configuration.GetConnectionString("GenericStoreContext");
+// AddDbContext() for SQL Server
+
+//var connectionString = builder.Configuration.GetConnectionString("GenericStoreContext");
+
+//builder.Services.AddDbContext<GenericStoreContext>(options =>
+//    options.UseSqlServer(connectionString));
+
+// AddDbContext() for PostgreSQL
+
+var connectionString = builder.Configuration.GetConnectionString("GenericStoreContext")
+    ?? builder.Configuration["DATABASE_URL"];
 
 builder.Services.AddDbContext<GenericStoreContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 

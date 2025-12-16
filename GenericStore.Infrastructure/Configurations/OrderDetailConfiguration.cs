@@ -3,27 +3,29 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GenericStore.Infrastructure.Configurations;
-public partial class OrderDetailConfiguration : IEntityTypeConfiguration<OrderDetail>
+
+public class OrderDetailConfiguration : IEntityTypeConfiguration<OrderDetail>
 {
     public void Configure(EntityTypeBuilder<OrderDetail> entity)
     {
-        entity.HasKey(e => e.OrderDetailId).HasName("PK_ORDERDETAIL_ID");
-        entity.ToTable("OrderDetail");
-        entity.Property(e => e.OrderId).HasColumnType("int");
-        entity.Property(e => e.ProductId).HasColumnType("int");
-        entity.Property(e => e.Quantity).HasColumnType("int");
-        entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+        entity.HasKey(e => e.OrderDetailId);
 
-        entity.HasOne(d => d.Order).WithOne(p => p.OrderDetail)
-            .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName("FK_OrderDetail_Order");
+        entity.ToTable("order_details");
 
-        entity.HasOne(d => d.Product).WithOne(p => p.OrderDetail)
-            .OnDelete(DeleteBehavior.Cascade)
-            .HasConstraintName("FK_OrderDetail_Product");
+        entity.Property(e => e.Quantity)
+            .IsRequired();
 
-        OnConfigurePartial(entity);
+        entity.Property(e => e.Price)
+            .HasPrecision(18, 2);
+
+        entity.HasOne(d => d.Order)
+            .WithOne(p => p.OrderDetail)
+            .HasForeignKey<OrderDetail>(d => d.OrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasOne(d => d.Product)
+            .WithOne(p => p.OrderDetail)
+            .HasForeignKey<OrderDetail>(d => d.ProductId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<OrderDetail> entity);
 }

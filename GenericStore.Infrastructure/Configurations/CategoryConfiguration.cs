@@ -3,21 +3,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace GenericStore.Infrastructure.Configurations;
 
-public partial class CategoryConfiguration : IEntityTypeConfiguration<Category>
+public class CategoryConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> entity)
     {
-        entity.HasKey(e => e.CategoryId).HasName("PK_CATEGORY_ID");
+        entity.HasKey(e => e.CategoryId);
 
-        entity.ToTable("Category");
+        entity.ToTable("categories");
 
         entity.Property(e => e.Name)
             .IsRequired()
-            .HasMaxLength(50)
-            .IsUnicode(false);
-
-        OnConfigurePartial(entity);
+            .HasMaxLength(50);
     }
-
-    partial void OnConfigurePartial(EntityTypeBuilder<Category> entity);
 }
