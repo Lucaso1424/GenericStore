@@ -19,10 +19,19 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddHttpContextAccessor();
 
+// AddDbContext() for SQL Server
+
+//var connectionString = builder.Configuration.GetConnectionString("GenericStoreContext");
+
+//builder.Services.AddDbContext<GenericStoreContext>(options =>
+//    options.UseSqlServer(connectionString));
+
+// AddDbContext() for PostgreSQL
+
 var connectionString = builder.Configuration.GetConnectionString("GenericStoreContext");
 
 builder.Services.AddDbContext<GenericStoreContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddSingleton<UtilsService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
