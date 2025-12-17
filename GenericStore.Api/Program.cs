@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
     {
         policy
-            .WithOrigins("http://localhost:5173")
+            .AllowAnyOrigin()
             .AllowAnyHeader()
             .AllowAnyMethod();
     });
@@ -35,8 +35,7 @@ builder.Services.AddCors(options =>
 
 // AddDbContext() for PostgreSQL
 
-var connectionString = builder.Configuration.GetConnectionString("GenericStoreContext")
-    ?? builder.Configuration["DATABASE_URL"];
+var connectionString = builder.Configuration.GetConnectionString("GenericStoreContext");
 
 builder.Services.AddDbContext<GenericStoreContext>(options =>
     options.UseNpgsql(connectionString));
@@ -82,8 +81,22 @@ builder.Services.AddAuthorizationBuilder()
         policy.RequireAuthenticatedUser();
     });
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    var port = Environment.GetEnvironmentVariable("PORT");
+    if (!string.IsNullOrEmpty(port))
+    {
+        options.ListenAnyIP(int.Parse(port));
+    }
+});
+
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<GenericStoreContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
