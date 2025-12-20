@@ -86,15 +86,6 @@ builder.Services.AddAuthorizationBuilder()
 //        options.ResponseType = "code";
 //    });
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    var port = Environment.GetEnvironmentVariable("PORT");
-    if (!string.IsNullOrEmpty(port))
-    {
-        options.ListenAnyIP(int.Parse(port));
-    }
-});
-
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -105,8 +96,6 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
-
-app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
