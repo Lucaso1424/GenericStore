@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,19 +13,17 @@ namespace GenericStore.Api.Controllers
     [Authorize]
     public class CategoryController : ControllerBase
     {
-        private readonly IHttpContextAccessor _contextAccessor;
         private readonly ICategoryService _categoryService;
         private readonly IMapper _mapping;
-        public CategoryController(IHttpContextAccessor httpContextAccessor, ICategoryService categoryService, IMapper mapping)
+        public CategoryController(ICategoryService categoryService, IMapper mapping)
         {
-            _contextAccessor = httpContextAccessor;
             _categoryService = categoryService;
             _mapping = mapping;
         }
 
         [Authorize(Policy = "Api.Read")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CategoryDTO>>> GetAllAsync()
+        public async Task<ActionResult<List<CategoryDTO>>> GetAllAsync()
         {
             var categories = await _categoryService.GetAllAsync();
 
@@ -33,8 +32,7 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var categoriesDTO = _mapping.Map<IEnumerable<CategoryDTO>>(categories);
-            return Ok(categoriesDTO);
+            return Ok(categories);
         }
 
         [Authorize(Policy = "Api.Read")]
@@ -48,8 +46,7 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var categoryDTO = _mapping.Map<CategoryDTO>(category);
-            return Ok(categoryDTO);
+            return Ok(category);
         }
 
         [Authorize(Policy = "Api.Write")]
@@ -58,7 +55,7 @@ namespace GenericStore.Api.Controllers
         {
             try
             {
-                var entity = _mapping.Map<Category>(categoryDTO);
+                var entity = categoryDTO.Adapt<Category>();
                 await _categoryService.CreateAsync(entity);
                 return Ok();
             }

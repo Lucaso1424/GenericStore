@@ -10,6 +10,6 @@ namespace GenericStore.Application.Interfaces
 {
     public interface ICategoryService : IGenericService<Category, CategoryDTO>
     {
-        Task<Category?> GetByIdAsync(int id);
+        Task<CategoryDTO?> GetByIdAsync(int id);
     }
 }

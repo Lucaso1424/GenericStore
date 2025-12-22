@@ -1,5 +1,4 @@
 using Core.Application.Services;
-using GenericStore.Application.Mappings;
 using GenericStore.Identity.Application.Interfaces;
 using GenericStore.Identity.Application.Services;
 using GenericStore.Infrastructure.UnitOfWork;
@@ -103,5 +102,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-// Configuración Azure 
