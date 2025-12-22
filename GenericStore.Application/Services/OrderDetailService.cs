@@ -4,6 +4,7 @@ using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
 using GenericStore.Infrastructure.UnitOfWork;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericStore.Application.Services;
@@ -14,8 +15,10 @@ public class OrderDetailService : GenericService<GenericStoreContext, OrderDetai
     {
     }
 
-    public async Task<OrderDetail?> GetOrderDetailByIdAsync(int id)
+    public async Task<OrderDetailDTO?> GetOrderDetailByIdAsync(int id)
     {
-        return await _context.OrderDetails.Where(x => x.OrderId == id).FirstOrDefaultAsync();
+        IQueryable query = _context.OrderDetails.Where(x => x.OrderId == id);
+        var orderDetail = await query.ProjectToType<OrderDetailDTO>().FirstOrDefaultAsync();
+        return orderDetail;
     }
 }

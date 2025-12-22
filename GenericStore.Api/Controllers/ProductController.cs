@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ namespace GenericStore.Api.Controllers
 
         [Authorize(Policy = "Api.Read")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDTO>>> GetAllAsync()
+        public async Task<ActionResult<List<ProductDTO>>> GetAllAsync()
         {
             var products = await _service.GetAllAsync();
 
@@ -33,8 +34,7 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var productsDTO = _mapping.Map<IEnumerable<ProductDTO>>(products);
-            return Ok(productsDTO);
+            return Ok(products);
         }
 
         [Authorize(Policy = "Api.Read")]
@@ -48,8 +48,7 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var productDTO = _mapping.Map<ProductDTO>(products);
-            return Ok(productDTO);
+            return Ok(products);
         }
 
         [Authorize(Policy = "Api.Write")]
@@ -58,7 +57,7 @@ namespace GenericStore.Api.Controllers
         {
             try
             {
-                var entity = _mapping.Map<Product>(productDTO);
+                var entity = productDTO.Adapt<Product>();
                 await _service.CreateAsync(entity);
                 return Ok();
             }

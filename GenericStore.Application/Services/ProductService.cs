@@ -3,6 +3,7 @@ using Core.Application.Services;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
 using GenericStore.Infrastructure.UnitOfWork;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace GenericStore.Application.Services;
@@ -11,13 +12,16 @@ public class ProductService : GenericService<GenericStoreContext, Product, Produ
     public ProductService(GenericStoreContext context, IMapper mapper) : base(context, mapper)
     {
 
-    }
+    }  
 
-    public async Task<Product?> GetByIdAsync(int id)
+    public async Task<ProductDTO?> GetByIdAsync(int id)
     {
-        return await _context.Products
-            .Include(x=> x.StoreProduct)
-            .Where(x => x.ProductId == id)
-            .FirstOrDefaultAsync();
+        IQueryable query = _context.Products
+            .Include(x => x.StoreProduct)
+            .Where(x => x.ProductId == id);
+
+        var product = await query.ProjectToType<ProductDTO>().FirstOrDefaultAsync();
+
+        return product;
     }
 }
