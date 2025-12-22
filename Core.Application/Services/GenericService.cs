@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Application.DTOs;
 using Core.Application.Interfaces;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Services;
@@ -11,9 +12,11 @@ public class GenericService<TContext, TEntity, TEntityDTO> : GenericServiceBase<
 {
     public GenericService(TContext context, IMapper mapper) : base(context, mapper) {}
 
-    public async Task<IEnumerable<TEntity?>> GetAllAsync()
+    public async Task<List<TEntityDTO?>> GetAllAsync()
     {
-        return await _context.Set<TEntity>().ToListAsync();
+        IQueryable query = _context.Set<TEntity>();
+        var entities = await query.ProjectToType<TEntityDTO?>().ToListAsync();
+        return entities;
     }
 
     public async Task CreateAsync(TEntity entity)
