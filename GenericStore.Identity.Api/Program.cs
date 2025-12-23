@@ -93,8 +93,20 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
+app.UsePathBase("/identity");
+
+app.Use((context, next) =>
+{
+    context.Request.PathBase = "/identity";
+    return next();  
+});
+
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/identity/swagger/v1/swagger.json", "Identity API v1");
+    c.RoutePrefix = "identity/swagger";
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
