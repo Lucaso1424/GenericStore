@@ -102,11 +102,7 @@ app.Use((context, next) =>
 });
 
 app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    c.SwaggerEndpoint("/identity/swagger/v1/swagger.json", "Identity API v1");
-    c.RoutePrefix = "identity/swagger";
-});
+app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
