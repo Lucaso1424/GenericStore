@@ -93,14 +93,6 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-app.UsePathBase("/identity");
-
-app.Use((context, next) =>
-{
-    context.Request.PathBase = "/identity";
-    return next();  
-});
-
 app.UseSwagger();
 app.UseSwaggerUI();
 
