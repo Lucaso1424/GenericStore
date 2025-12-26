@@ -14,11 +14,9 @@ namespace GenericStore.Api.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
-        private readonly IMapper _mapping;
-        public CategoryController(ICategoryService categoryService, IMapper mapping)
+        public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
-            _mapping = mapping;
         }
 
         [Authorize(Policy = "Api.Read")]

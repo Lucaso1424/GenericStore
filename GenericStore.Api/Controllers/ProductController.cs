@@ -15,12 +15,10 @@ namespace GenericStore.Api.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _service;
-        private readonly IMapper _mapping;
 
-        public ProductController(IProductService service, IMapper mapper)
+        public ProductController(IProductService service)
         {
             _service = service;
-            _mapping = mapper;
         }
 
         [Authorize(Policy = "Api.Read")]

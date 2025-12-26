@@ -16,12 +16,10 @@ namespace GenericStore.Api.Controllers
     {
         private readonly IOrderService orderService;
         private readonly IOrderDetailService orderDetailService;
-        private readonly IMapper mapper;
-        public OrderController(IOrderService orderService, IOrderDetailService orderDetailService, IMapper mapper)
+        public OrderController(IOrderService orderService, IOrderDetailService orderDetailService)
         {
             this.orderService = orderService;
             this.orderDetailService = orderDetailService;
-            this.mapper = mapper;
         }
 
         [Authorize(Policy = "Api.Read")]
