@@ -14,11 +14,9 @@ namespace GenericStore.Api.Controllers
     public class StoreProductController : ControllerBase
     {
         private readonly IStoreProductService storeProductService;
-        private readonly IMapper mapper;
-        public StoreProductController(IStoreProductService storeProductService, IMapper mapper)
+        public StoreProductController(IStoreProductService storeProductService)
         {
             this.storeProductService = storeProductService;
-            this.mapper = mapper;
         }
 
         [Authorize(Policy = "Api.Read")]

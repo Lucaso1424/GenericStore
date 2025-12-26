@@ -3,7 +3,9 @@ using GenericStore.Application.DTOs;
 using GenericStore.Domain.Entities;
 using GenericStore.Identity.Application.Interfaces;
 using GenericStore.Infrastructure.UnitOfWork;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace GenericStore.Identity.Application.Services
 {
@@ -19,25 +21,29 @@ namespace GenericStore.Identity.Application.Services
 
         public async Task RegisterNewUserAsync(UserDTO userDTO)
         {
-            var user = new User
-            {
-                Email = userDTO.Email,
-                Name = userDTO.Name,
-                LastName = userDTO.LastName,
-                RoleId = userDTO.RoleId,
-                PasswordHash = _utilsService.EncryptSHA256(userDTO.Password)
-            };
+            var user = userDTO.Adapt<User>();
+            user.PasswordHash = _utilsService.EncryptSHA256(userDTO.Password);
             await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                // TODO: Add _loggerService() 
+                throw new DuplicateNameException("There is already a user with the same email address.", ex);
+            }
         }
 
         public async Task<string> LoginAsync(string email, string password)
         {
             string passwordHash = _utilsService.EncryptSHA256(password);
 
-            var existingUser = await _context.Users
-                .Where(x => x.Email == email && x.PasswordHash == passwordHash)
-                .FirstOrDefaultAsync();
+            IQueryable query = _context.Users
+                .Where(x => x.Email == email && x.PasswordHash == passwordHash);
+
+            var existingUser = await query.ProjectToType<User>().FirstOrDefaultAsync();
 
             if (existingUser == null)
             {

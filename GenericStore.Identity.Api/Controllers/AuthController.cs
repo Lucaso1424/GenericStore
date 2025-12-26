@@ -22,7 +22,7 @@ namespace GenericStore.Identity.Api.Controllers
         public async Task<ActionResult> RegisterUserAsync([FromBody] UserDTO userDTO)
         {
             await _authService.RegisterNewUserAsync(userDTO);
-            return Ok();
+            return NoContent();
         }
 
         [HttpPost("Login")]
