@@ -1,3 +1,4 @@
+using Core.CrossCutting.Middlewares;
 using GenericStore.Application.Interfaces;
 using GenericStore.Application.Services;
 using GenericStore.Infrastructure.UnitOfWork;
@@ -119,6 +120,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
