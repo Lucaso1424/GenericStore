@@ -1,3 +1,4 @@
+using Core.CrossCutting.Middlewares;
 using GenericStore.Application.Interfaces;
 using GenericStore.Application.Services;
 using GenericStore.Infrastructure.UnitOfWork;
@@ -127,6 +128,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseSwagger();
 app.UseSwaggerUI();
 

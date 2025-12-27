@@ -20,6 +20,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+    <ProjectReference Include="..\Core.CrossCutting\Core.CrossCutting.csproj" />
     <ProjectReference Include="..\GenericStore.Application\GenericStore.Application.csproj" />
   </ItemGroup>
 

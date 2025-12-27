@@ -1,4 +1,5 @@
 using Core.Application.Services;
+using Core.CrossCutting.Middlewares;
 using GenericStore.Identity.Application.Interfaces;
 using GenericStore.Identity.Application.Services;
 using GenericStore.Infrastructure.UnitOfWork;
@@ -121,6 +122,8 @@ using (var scope = app.Services.CreateScope())
 
 app.UseSwagger();
 app.UseSwaggerUI();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
