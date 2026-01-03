@@ -5,6 +5,7 @@ using GenericStore.Identity.Application.Interfaces;
 using GenericStore.Infrastructure.UnitOfWork;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Data;
 
 namespace GenericStore.Identity.Application.Services
@@ -13,10 +14,12 @@ namespace GenericStore.Identity.Application.Services
     {
         private readonly UtilsService _utilsService;
         private readonly GenericStoreContext _context;
-        public AuthenticationService(UtilsService utilsService, GenericStoreContext context)
+        private readonly ILogger<AuthenticationService> _logger;
+        public AuthenticationService(UtilsService utilsService, GenericStoreContext context, ILogger<AuthenticationService> logger)
         {
             _utilsService = utilsService;
             _context = context;
+            _logger = logger;
         }
 
         public async Task RegisterNewUserAsync(UserDTO userDTO)
@@ -31,7 +34,7 @@ namespace GenericStore.Identity.Application.Services
             }
             catch (DbUpdateException ex)
             {
-                // TODO: Add _loggerService() 
+                _logger.LogError("Register attempt for {Email}", user.Email);
                 throw new DuplicateNameException("There is already a user with the same email address.", ex);
             }
         }
