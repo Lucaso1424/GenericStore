@@ -18,7 +18,7 @@ public class StoreService : GenericService<GenericStoreContext, Store, StoreDTO>
 
     public async Task<StoreDTO?> GetByIdAsync(int id)
     {
-        IQueryable query = _context.Stores
+        IQueryable<Store> query = _context.Stores
             .Include(x => x.StoreProducts)
             .Where(x => x.StoreId == id);
 

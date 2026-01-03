@@ -56,6 +56,12 @@ namespace Core.CrossCutting.Middlewares
                     problems.Detail = exception.Message;
                     break;
 
+                case ArgumentException:
+                    problems.Status = StatusCodes.Status412PreconditionFailed;
+                    problems.Title = "Precondition failed";
+                    problems.Detail = exception.Message;
+                    break;
+
                 default:
                     problems.Status = StatusCodes.Status500InternalServerError;
                     problems.Title = "Internal Server Error";
