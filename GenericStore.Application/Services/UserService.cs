@@ -22,7 +22,7 @@ namespace GenericStore.Application.Services
 
         public async Task<UserDTO?> GetUserByIdAsync(int id)
         {
-            IQueryable query = _context.Users
+            IQueryable<User> query = _context.Users
                 .Include(x => x.Orders)
                 .Where(x => x.UserId == id);
 

@@ -22,7 +22,7 @@ namespace GenericStore.Application.Services
 
         public async Task<OrderDTO?> GetOrderByIdAsync(int id)
         {
-            IQueryable query = _context.Orders
+            IQueryable<Order> query = _context.Orders
                 .Include(x => x.OrderDetail)
                 .Where(x => x.OrderId == id);
 

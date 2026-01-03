@@ -16,7 +16,7 @@ public class StoreProductService : GenericService<GenericStoreContext, StoreProd
 
     public async Task<StoreProductDTO?> GetByIdAsync(int id)
     {
-        IQueryable query = _context.StoreProducts.Where(x => x.StoreProductId == id);
+        IQueryable<StoreProduct> query = _context.StoreProducts.Where(x => x.StoreProductId == id);
         var storeProduct = await query.ProjectToType<StoreProductDTO>().FirstOrDefaultAsync();
         return storeProduct;
     }

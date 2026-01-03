@@ -17,7 +17,7 @@ public class OrderDetailService : GenericService<GenericStoreContext, OrderDetai
 
     public async Task<OrderDetailDTO?> GetOrderDetailByIdAsync(int id)
     {
-        IQueryable query = _context.OrderDetails.Where(x => x.OrderId == id);
+        IQueryable<OrderDetail> query = _context.OrderDetails.Where(x => x.OrderId == id);
         var orderDetail = await query.ProjectToType<OrderDetailDTO>().FirstOrDefaultAsync();
         return orderDetail;
     }

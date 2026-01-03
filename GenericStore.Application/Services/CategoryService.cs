@@ -21,7 +21,7 @@ namespace GenericStore.Application.Services
 
         public async Task<CategoryDTO?> GetByIdAsync(int id)
         {
-            IQueryable query = _context.Categories
+            IQueryable<Category> query = _context.Categories
                 .Include(x => x.Products)
                 .Where(x => x.CategoryId == id);
 
