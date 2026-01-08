@@ -42,8 +42,18 @@ namespace Core.Application.Services
                 new Claim("scope", "api.read")
             };
 
-            if (user.RoleId == (int)RoleId.Admin) 
-                claims.Add(new Claim("scope", "api.write"));
+            switch((RoleId)user.RoleId)
+            {
+                case RoleId.Admin:
+                    claims.Add(new Claim(ClaimTypes.Role, RoleId.Admin.ToString()));
+                    break;
+                case RoleId.Employee:
+                    claims.Add(new Claim(ClaimTypes.Role, RoleId.Employee.ToString()));
+                    break;
+                case RoleId.Customer:
+                    claims.Add(new Claim(ClaimTypes.Role, RoleId.Customer.ToString()));
+                    break;
+            }
 
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var credential = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);

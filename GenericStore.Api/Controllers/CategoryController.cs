@@ -47,7 +47,7 @@ namespace GenericStore.Api.Controllers
             return Ok(category);
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] CategoryDTO categoryDTO)
         {
@@ -63,7 +63,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync(int id, [FromQuery] CategoryDTO categoryDTO)
         {
@@ -83,7 +83,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync(int id)
         {

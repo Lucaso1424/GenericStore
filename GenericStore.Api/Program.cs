@@ -1,12 +1,14 @@
 using Core.CrossCutting.Middlewares;
 using GenericStore.Application.Interfaces;
 using GenericStore.Application.Services;
+using GenericStore.Domain.Enums;
 using GenericStore.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 
@@ -108,6 +110,21 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Api.Write", policy =>
     {
         policy.RequireClaim("scope", "api.write");
+        policy.RequireAuthenticatedUser();
+    })
+    .AddPolicy("Role.Admin", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, RoleId.Admin.ToString());
+        policy.RequireAuthenticatedUser();
+    })
+    .AddPolicy("Role.Employee", policy =>
+     {
+         policy.RequireClaim(ClaimTypes.Role, RoleId.Employee.ToString());
+         policy.RequireAuthenticatedUser();
+     })
+    .AddPolicy("Role.Customer", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, RoleId.Customer.ToString());
         policy.RequireAuthenticatedUser();
     });
 

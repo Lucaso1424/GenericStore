@@ -34,7 +34,7 @@ namespace GenericStore.Identity.Application.Services
             }
             catch (DbUpdateException ex)
             {
-                _logger.LogError("Register attempt for {Email}", user.Email);
+                _logger.LogError("Register attempt FAILED for {Email}", user.Email);
                 throw new DuplicateNameException("There is already a user with the same email address.", ex);
             }
         }
@@ -43,10 +43,10 @@ namespace GenericStore.Identity.Application.Services
         {
             string passwordHash = _utilsService.EncryptSHA256(password);
 
-            IQueryable query = _context.Users
+            IQueryable<User> query = _context.Users
                 .Where(x => x.Email == email && x.PasswordHash == passwordHash);
 
-            var existingUser = await query.ProjectToType<User>().FirstOrDefaultAsync();
+            var existingUser = await query.FirstOrDefaultAsync();
 
             if (existingUser == null)
             {

@@ -17,8 +17,8 @@ namespace GenericStore.Identity.Api.Controllers
             _authService = authService;
         }
 
-        [Authorize(Policy = "Api.Write")]
         [HttpPost("RegisterUser")]
+        [Authorize(Policy = "Role.Admin")]
         public async Task<ActionResult> RegisterUserAsync([FromBody] UserDTO userDTO)
         {
             await _authService.RegisterNewUserAsync(userDTO);

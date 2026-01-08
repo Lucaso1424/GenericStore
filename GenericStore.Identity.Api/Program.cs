@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 using Serilog;
+using System.Security.Claims;
+using GenericStore.Domain.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -103,6 +105,11 @@ builder.Services.AddAuthorizationBuilder()
     .AddPolicy("Api.Write", policy =>
     {
         policy.RequireClaim("scope", "api.write");
+        policy.RequireAuthenticatedUser();
+    })
+    .AddPolicy("Role.Admin", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, RoleId.Admin.ToString());
         policy.RequireAuthenticatedUser();
     });
 

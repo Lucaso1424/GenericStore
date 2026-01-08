@@ -16,18 +16,15 @@ namespace GenericStore.Identity.Api.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserService userService;
-        private readonly IMapper mapper;
 
         public UserController(IUserService userService, IMapper mapper) 
         {
-            _contextAccessor = new HttpContextAccessor();
             this.userService = userService;
-            this.mapper = mapper;
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Api.Read")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpGet]
         public async Task<ActionResult<List<UserDTO>>> GetAllAsync()
         {
@@ -41,7 +38,8 @@ namespace GenericStore.Identity.Api.Controllers
             return Ok(users);
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Api.Read")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDTO>> GetByIdAsync(int id)
         {
@@ -55,7 +53,7 @@ namespace GenericStore.Identity.Api.Controllers
             return Ok(user);
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] UserDTO userDTO)
         {
@@ -71,7 +69,7 @@ namespace GenericStore.Identity.Api.Controllers
             }
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromBody] UserDTO userDTO, int id)
         {
@@ -90,7 +88,7 @@ namespace GenericStore.Identity.Api.Controllers
             }
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
