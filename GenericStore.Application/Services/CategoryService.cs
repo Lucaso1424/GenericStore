@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Core.Application.Services;
+﻿using Core.Application.Services;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
 using GenericStore.Infrastructure.UnitOfWork;
@@ -15,7 +14,7 @@ namespace GenericStore.Application.Services
 {
     public class CategoryService : GenericService<GenericStoreContext, Category, CategoryDTO>, ICategoryService
     {
-        public CategoryService(GenericStoreContext context, IMapper mapper) : base(context, mapper)
+        public CategoryService(GenericStoreContext context) : base(context)
         {
         }
 

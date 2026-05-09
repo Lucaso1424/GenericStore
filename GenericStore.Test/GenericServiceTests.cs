@@ -1,6 +1,5 @@
 namespace GenericStore.Test;
 
-using AutoMapper;
 using Core.Application.DTOs;
 using Core.Application.Services;
 using GenericStore.Infrastructure.UnitOfWork;
@@ -14,14 +13,12 @@ using Xunit;
 public class GenericServiceTests
 {
     private readonly Mock<GenericStoreContext> _mockContext;
-    private readonly Mock<IMapper> _mockMapper;
     private readonly GenericService<GenericStoreContext, TestEntity, TestEntityDTO> _service;
 
     public GenericServiceTests()
     {
         _mockContext = new Mock<GenericStoreContext>();
-        _mockMapper = new Mock<IMapper>();
-        _service = new GenericService<GenericStoreContext, TestEntity, TestEntityDTO>(_mockContext.Object, _mockMapper.Object);
+        _service = new GenericService<GenericStoreContext, TestEntity, TestEntityDTO>(_mockContext.Object);
     }
 
     [Fact]
@@ -74,8 +71,6 @@ public class GenericServiceTests
         // Arrange
         var dto = new TestEntityDTO { TrackingState = "Modified", Id = 1 };
         var entity = new TestEntity();
-
-        _mockMapper.Setup(m => m.Map<TestEntity>(It.IsAny<TestEntityDTO>())).Returns(entity);
 
         var dbSetMock = new Mock<DbSet<TestEntity>>();
         dbSetMock.Setup(m => m.FindAsync(It.IsAny<int>())).ReturnsAsync(entity);

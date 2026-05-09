@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Core.Application.Services;
+﻿using Core.Application.Services;
 using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
@@ -11,7 +10,7 @@ namespace GenericStore.Application.Services;
 
 public class StoreService : GenericService<GenericStoreContext, Store, StoreDTO>, IStoreService
 {
-    public StoreService(GenericStoreContext context, IMapper mapper) : base(context, mapper)
+    public StoreService(GenericStoreContext context) : base(context)
     {
 
     }

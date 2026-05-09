@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using GenericStore.Application.DTOs;
+﻿using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
 using Mapster;

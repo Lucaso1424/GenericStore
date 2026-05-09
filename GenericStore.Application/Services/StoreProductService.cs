@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Core.Application.Services;
+﻿using Core.Application.Services;
 using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
@@ -10,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 namespace GenericStore.Application.Services;
 public class StoreProductService : GenericService<GenericStoreContext, StoreProduct, StoreProductDTO>, IStoreProductService
 {
-    public StoreProductService(GenericStoreContext context, IMapper mapper) : base(context, mapper)
+    public StoreProductService(GenericStoreContext context) : base(context)
     {
     }
 

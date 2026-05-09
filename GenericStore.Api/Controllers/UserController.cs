@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using GenericStore.Application.DTOs;
+﻿using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Application.Services;
 using GenericStore.Domain.Entities;
@@ -18,7 +17,7 @@ namespace GenericStore.Identity.Api.Controllers
     {
         private readonly IUserService userService;
 
-        public UserController(IUserService userService, IMapper mapper) 
+        public UserController(IUserService userService) 
         {
             this.userService = userService;
         }

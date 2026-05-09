@@ -73,7 +73,6 @@ builder.Services.AddDbContext<GenericStoreContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IStoreService, StoreService>();

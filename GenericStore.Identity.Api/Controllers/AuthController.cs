@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using GenericStore.Application.DTOs;
-using GenericStore.Domain.Entities;
+﻿using GenericStore.Application.DTOs;
 using GenericStore.Identity.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

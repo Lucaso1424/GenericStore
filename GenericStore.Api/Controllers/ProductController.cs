@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using GenericStore.Application.Interfaces;
+﻿using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;

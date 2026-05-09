@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Core.Application.DTOs;
+﻿using Core.Application.DTOs;
 using Core.Application.Interfaces;
 using Mapster;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +9,7 @@ public class GenericService<TContext, TEntity, TEntityDTO> : GenericServiceBase<
     where TEntity : class
     where TEntityDTO : BaseEntityDTO
 {
-    public GenericService(TContext context, IMapper mapper) : base(context, mapper) {}
+    public GenericService(TContext context) : base(context) {}
 
     public async Task<List<TEntityDTO?>> GetAllAsync()
     {
@@ -30,7 +29,7 @@ public class GenericService<TContext, TEntity, TEntityDTO> : GenericServiceBase<
         if (!Enum.TryParse(dto.TrackingState.ToString(), out EntityState entityState))
             throw new ArgumentException("Invalid TrackingState value");
 
-        var entity = _mapper.Map<TEntity>(dto);
+        var entity = dto.Adapt<TEntity>();
         if (entity == null || entityState == EntityState.Unchanged) return;
 
         switch (entityState)

@@ -20,6 +20,14 @@ GenericStore is a lightweight starting point for building applications using **D
 /GenericStore.Test # Automated tests (unit / integration)\
 GenericStore.sln 
 
+## Live demo
+
+The project is deployed on a Raspberry Pi 3B+ on a Docker server with two containers for each API project and a PostgreSQL database also hosted in another container. 
+
+http://lucashome1424.duckdns.org:5000/swagger/index.html
+
+http://lucashome1424.duckdns.org:5001/swagger/index.html
+
 # Main solution file
 
 ## Getting Started  
