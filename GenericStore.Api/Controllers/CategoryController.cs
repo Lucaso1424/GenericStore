@@ -2,7 +2,6 @@
 using GenericStore.Domain.Entities;
 using Mapster;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GenericStore.Api.Controllers
@@ -73,7 +72,7 @@ namespace GenericStore.Api.Controllers
 
             try
             {
-                await _categoryService.UpdateAsync(categoryDTO);
+                await _categoryService.UpdateByIdAsync(categoryDTO, id);
                 return NoContent();
             }
             catch (Exception ex)

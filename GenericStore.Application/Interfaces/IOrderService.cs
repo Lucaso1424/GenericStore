@@ -7,4 +7,5 @@ namespace GenericStore.Application.Interfaces;
 public interface IOrderService : IGenericService<Order, OrderDTO>
 {
     Task<OrderDTO?> GetOrderByIdAsync(int id);
+    Task UpdateByIdAsync(OrderDTO dto, int id);
 }

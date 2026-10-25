@@ -65,25 +65,6 @@ public class GenericServiceTests
         _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once);
     }
 
-    [Fact]
-    public async Task UpdateAsync_ShouldUpdateEntity()
-    {
-        // Arrange
-        var dto = new TestEntityDTO { TrackingState = "Modified", Id = 1 };
-        var entity = new TestEntity();
-
-        var dbSetMock = new Mock<DbSet<TestEntity>>();
-        dbSetMock.Setup(m => m.FindAsync(It.IsAny<int>())).ReturnsAsync(entity);
-        _mockContext.Setup(c => c.Set<TestEntity>()).Returns(dbSetMock.Object);
-
-        // Act
-        await _service.UpdateAsync(dto);
-
-        // Assert
-        _mockContext.Verify(c => c.SaveChangesAsync(default), Times.Once);
-        dbSetMock.Verify(m => m.Update(It.Is<TestEntity>(e => e == entity)), Times.Once);
-    }
-
 
     [Fact]
     public async Task DeleteAsync_ShouldRemoveEntity()

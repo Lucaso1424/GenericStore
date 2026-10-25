@@ -6,8 +6,8 @@ using GenericStore.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using System.Text;
+using Microsoft.OpenApi;
 using Serilog;
 using System.Security.Claims;
 using GenericStore.Domain.Enums;
@@ -23,35 +23,25 @@ builder.Services.AddEndpointsApiExplorer();
 // AddSwaggerGen() with SecurityDefinition and SecurityRequirement for Bearer tokens
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new OpenApiInfo
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
     {
         Title = "Identity API",
         Version = "v1"
     });
 
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.Http,
+        Type = Microsoft.OpenApi.SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
-        In = ParameterLocation.Header,
+        In = Microsoft.OpenApi.ParameterLocation.Header,
         Description = "Introduce the JWT token: Bearer {your_token}"
     });
 
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    options.AddSecurityRequirement(document => new Microsoft.OpenApi.OpenApiSecurityRequirement
     {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
-        }
+        [new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document)] = []
     });
 });
 // AddSwaggerGen() with SecurityDefinition and SecurityRequirement for Bearer tokens
@@ -112,19 +102,6 @@ builder.Services.AddAuthorizationBuilder()
         policy.RequireClaim(ClaimTypes.Role, RoleId.Admin.ToString());
         policy.RequireAuthenticatedUser();
     });
-
-// Configuración de autenticación de Azure AD (para Microsoft Entra ID)
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
-//builder.Services.AddAuthentication()
-//    .AddOpenIdConnect("aad", options =>
-//    {
-//        options.Authority = $"https://login.microsoftonline.com/{tenantId}/v2.0";
-//        options.ClientId = clientId;
-//        options.ClientSecret = clientSecret;
-//        options.ResponseType = "code";
-//    });
 
 var app = builder.Build();
 

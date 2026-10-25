@@ -20,9 +20,29 @@ namespace GenericStore.Application.Services
                 .Include(x => x.Orders)
                 .Where(x => x.UserId == id);
 
-            var user = await query.ProjectToType<UserDTO>().FirstOrDefaultAsync();
+            var user = await query.ProjectToType<UserDTO>().AsNoTracking().FirstOrDefaultAsync();
 
             return user;
+        }
+
+
+        public async Task UpdateUserById(UserDTO userDTO, int id)
+        {
+            var user = await _context.Users.FindAsync(id) ?? throw new KeyNotFoundException($"User with id {id} not found");
+
+            try
+            {
+                user.Name = userDTO.Name;
+                user.LastName = userDTO.LastName;
+                user.Email = userDTO.Email;
+                user.RoleId = userDTO.RoleId;
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while updating the product.", ex);
+            }
         }
     }
 }

@@ -78,7 +78,7 @@ namespace GenericStore.Identity.Api.Controllers
                 {
                     return BadRequest();
                 }
-                await userService.UpdateAsync(userDTO);
+                await userService.UpdateUserById(userDTO, id);
                 return NoContent();
             }
             catch (Exception ex)
