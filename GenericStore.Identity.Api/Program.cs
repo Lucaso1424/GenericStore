@@ -1,5 +1,5 @@
 using Core.Application.Services;
-using GenericStore.Application.Mappings;
+using Core.CrossCutting.Middlewares;
 using GenericStore.Identity.Application.Interfaces;
 using GenericStore.Identity.Application.Services;
 using GenericStore.Infrastructure.UnitOfWork;
@@ -7,15 +7,44 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.OpenApi;
+using Serilog;
+using System.Security.Claims;
+using GenericStore.Domain.Enums;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// AddSwaggerGen() with SecurityDefinition and SecurityRequirement for Bearer tokens
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
+    {
+        Title = "Identity API",
+        Version = "v1"
+    });
+
+    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.ParameterLocation.Header,
+        Description = "Introduce the JWT token: Bearer {your_token}"
+    });
+
+    options.AddSecurityRequirement(document => new Microsoft.OpenApi.OpenApiSecurityRequirement
+    {
+        [new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
+});
+// AddSwaggerGen() with SecurityDefinition and SecurityRequirement for Bearer tokens
 
 builder.Services.AddHttpContextAccessor();
 
@@ -26,6 +55,21 @@ builder.Services.AddDbContext<GenericStoreContext>(options =>
 
 builder.Services.AddSingleton<UtilsService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+Log.Logger = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .Enrich.WithProperty("Application", "Identity.Api")
+    .WriteTo.File(
+        path: "log-.txt",
+        rollingInterval: RollingInterval.Day,
+        retainedFileCountLimit: 7,
+        shared: true,
+        outputTemplate:
+            "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
+    )
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 
 builder.Services.AddAuthentication(config =>
 {
@@ -52,20 +96,12 @@ builder.Services.AddAuthorizationBuilder()
     {
         policy.RequireClaim("scope", "api.write");
         policy.RequireAuthenticatedUser();
+    })
+    .AddPolicy("Role.Admin", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, RoleId.Admin.ToString());
+        policy.RequireAuthenticatedUser();
     });
-
-// Configuración de autenticación de Azure AD (para Microsoft Entra ID)
-//builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
-
-//builder.Services.AddAuthentication()
-//    .AddOpenIdConnect("aad", options =>
-//    {
-//        options.Authority = $"https://login.microsoftonline.com/{tenantId}/v2.0";
-//        options.ClientId = clientId;
-//        options.ClientSecret = clientSecret;
-//        options.ResponseType = "code";
-//    });
 
 var app = builder.Build();
 
@@ -76,6 +112,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -84,5 +122,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-// Configuración Azure 

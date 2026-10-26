@@ -1,64 +1,59 @@
-﻿using AutoMapper;
-using GenericStore.Application.Services;
+﻿using GenericStore.Application.Services;
 using GenericStore.Domain.Entities;
 using GenericStore.Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 
-namespace GenericStore.Application.Tests
+namespace GenericStore.Application.Tests;
+public class ProductServiceTests
 {
-    public class ProductServiceTests
+    private GenericStoreContext CreateContext()
     {
-        private readonly Mock<IMapper> _mockMapper = new();
-        private GenericStoreContext CreateContext()
+        var options = new DbContextOptionsBuilder<GenericStoreContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString()) // By this way, the database is unique for each test with Guid.NewGuid()
+            .Options;
+
+        return new GenericStoreContext(options);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_ShouldReturnEntity()
+    {
+        // Arrange
+        using var context = CreateContext();
+
+        var product = new Product
         {
-            var options = new DbContextOptionsBuilder<GenericStoreContext>()
-                .UseInMemoryDatabase(Guid.NewGuid().ToString()) // By this way, the database is unique for each test with Guid.NewGuid()
-                .Options;
+            ProductId = 1,
+            Name = "Test Product",
+            Description = "Test Description",
+            Price = 9.99m,
+            OnSale = false,
+            CreatedDate = DateTime.UtcNow
+        };
+        context.Products.Add(product);
+        await context.SaveChangesAsync();
 
-            return new GenericStoreContext(options);
-        }
+        var service = new ProductService(context);
 
-        [Fact]
-        public async Task GetByIdAsync_ShouldReturnEntity()
-        {
-            // Arrange
-            using var context = CreateContext();
+        // Act
+        var result = await service.GetByIdAsync(1);
 
-            var product = new Product
-            {
-                ProductId = 1,
-                Name = "Test Product",
-                Description = "Test Description",
-                Price = 9.99m,
-                OnSale = false,
-                CreatedDate = DateTime.UtcNow
-            };
-            context.Products.Add(product);
-            await context.SaveChangesAsync();
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(1, result.ProductId);
+    }
 
-            var service = new ProductService(context, _mockMapper.Object);
+    [Fact]
+    public async Task GetByIdAsync_ShouldReturnNotFound()
+    {
+        // Arrange
+        using var context = CreateContext();
+        var service = new ProductService(context);
 
-            // Act
-            var result = await service.GetByIdAsync(1);
+        // Act
+        var result = await service.GetByIdAsync(999); // Non-existing ID
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(1, result.ProductId);
-        }
-
-        [Fact]
-        public async Task GetByIdAsync_ShouldReturnNotFound()
-        {
-            // Arrange
-            using var context = CreateContext();
-            var service = new ProductService(context, _mockMapper.Object);
-
-            // Act
-            var result = await service.GetByIdAsync(999); // Non-existing ID
-
-            // Assert
-            Assert.Null(result);
-        }
+        // Assert
+        Assert.Null(result);
     }
 }

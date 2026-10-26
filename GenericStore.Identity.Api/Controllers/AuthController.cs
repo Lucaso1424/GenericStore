@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using GenericStore.Application.DTOs;
-using GenericStore.Domain.Entities;
+﻿using GenericStore.Application.DTOs;
 using GenericStore.Identity.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +15,12 @@ namespace GenericStore.Identity.Api.Controllers
             _authService = authService;
         }
 
-        [Authorize(Policy = "Api.Write")]
         [HttpPost("RegisterUser")]
+        [Authorize(Policy = "Role.Admin")]
         public async Task<ActionResult> RegisterUserAsync([FromBody] UserDTO userDTO)
         {
             await _authService.RegisterNewUserAsync(userDTO);
-            return Ok();
+            return NoContent();
         }
 
         [HttpPost("Login")]

@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using GenericStore.Application.DTOs;
+﻿using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +14,14 @@ namespace GenericStore.Api.Controllers
     public class StoreController : ControllerBase
     {
         private readonly IStoreService storeService;
-        private readonly IMapper mapper;
-        public StoreController(IStoreService storeService, IMapper mapper)
+        public StoreController(IStoreService storeService)
         {
             this.storeService = storeService;
-            this.mapper = mapper;
         }
 
         [Authorize(Policy = "Api.Read")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<StoreDTO>>> GetAllAsync()
+        public async Task<ActionResult<List<StoreDTO>>> GetAllAsync()
         {
             var stores = await storeService.GetAllAsync();
 
@@ -32,8 +30,7 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var storesDTO = mapper.Map<IEnumerable<StoreDTO>>(stores);
-            return Ok(storesDTO);
+            return Ok(stores);
         }
 
         [Authorize(Policy = "Api.Read")]
@@ -47,17 +44,16 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var storeDTO = mapper.Map<StoreDTO>(store);
-            return Ok(storeDTO);
+            return Ok(store);
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] StoreDTO storeDTO)
         {
             try
             {
-                var entity = mapper.Map<Store>(storeDTO);
+                var entity = storeDTO.Adapt<Store>();
                 await storeService.CreateAsync(entity);
                 return Ok();
             }
@@ -67,7 +63,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromBody] StoreDTO storeDTO, int id)
         {
@@ -77,7 +73,7 @@ namespace GenericStore.Api.Controllers
                 {
                     return BadRequest();
                 }
-                await storeService.UpdateAsync(storeDTO);
+                await storeService.UpdateByIdAsync(storeDTO, id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -86,7 +82,7 @@ namespace GenericStore.Api.Controllers
             }
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id) 
         {

@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using GenericStore.Application.DTOs;
+﻿using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Application.Services;
 using GenericStore.Domain.Entities;
 using GenericStore.Domain.Enums;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,20 +15,17 @@ namespace GenericStore.Identity.Api.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserService userService;
-        private readonly IMapper mapper;
 
-        public UserController(IUserService userService, IMapper mapper) 
+        public UserController(IUserService userService) 
         {
-            _contextAccessor = new HttpContextAccessor();
             this.userService = userService;
-            this.mapper = mapper;
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Api.Read")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDTO>>> GetAllAsync()
+        public async Task<ActionResult<List<UserDTO>>> GetAllAsync()
         {
             var users = await userService.GetAllAsync();
 
@@ -37,16 +34,11 @@ namespace GenericStore.Identity.Api.Controllers
                 return NotFound();
             }
 
-            var usersDTO = mapper.Map<IEnumerable<UserDTO>>(users);
-            foreach (var userDTO in usersDTO)
-            {
-                RoleId roleId = (RoleId)Enum.Parse(typeof(RoleId), userDTO.RoleId.ToString());
-                userDTO.RoleDisplayName = roleId.ToString();
-            }
-            return Ok(usersDTO);
+            return Ok(users);
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Api.Read")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDTO>> GetByIdAsync(int id)
         {
@@ -57,19 +49,16 @@ namespace GenericStore.Identity.Api.Controllers
                 return NotFound();
             }
 
-            var userDTO = mapper.Map<UserDTO>(user);
-            RoleId roleId = (RoleId)Enum.Parse(typeof(RoleId), user.RoleId.ToString());
-            userDTO.RoleDisplayName = roleId.ToString();
-            return Ok(userDTO);
+            return Ok(user);
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpPost]
         public async Task<ActionResult> CreateAsync([FromBody] UserDTO userDTO)
         {
             try
             {
-                var entity = mapper.Map<User>(userDTO);
+                var entity = userDTO.Adapt<User>();
                 await userService.CreateAsync(entity);
                 return Ok();
             }
@@ -79,7 +68,7 @@ namespace GenericStore.Identity.Api.Controllers
             }
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateAsync([FromBody] UserDTO userDTO, int id)
         {
@@ -89,7 +78,7 @@ namespace GenericStore.Identity.Api.Controllers
                 {
                     return BadRequest();
                 }
-                await userService.UpdateAsync(userDTO);
+                await userService.UpdateUserById(userDTO, id);
                 return NoContent();
             }
             catch (Exception ex)
@@ -98,7 +87,7 @@ namespace GenericStore.Identity.Api.Controllers
             }
         }
 
-        [Authorize(Policy = "Api.Write")]
+        [Authorize(Policy = "Role.Admin")]
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {

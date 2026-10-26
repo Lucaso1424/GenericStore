@@ -1,7 +1,7 @@
-﻿using AutoMapper;
-using GenericStore.Application.DTOs;
+﻿using GenericStore.Application.DTOs;
 using GenericStore.Application.Interfaces;
 using GenericStore.Domain.Entities;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,17 +15,15 @@ namespace GenericStore.Api.Controllers
     {
         private readonly IOrderService orderService;
         private readonly IOrderDetailService orderDetailService;
-        private readonly IMapper mapper;
-        public OrderController(IOrderService orderService, IOrderDetailService orderDetailService, IMapper mapper)
+        public OrderController(IOrderService orderService, IOrderDetailService orderDetailService)
         {
             this.orderService = orderService;
             this.orderDetailService = orderDetailService;
-            this.mapper = mapper;
         }
 
         [Authorize(Policy = "Api.Read")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<OrderDTO>>> GetAllAsync()
+        public async Task<ActionResult<List<OrderDTO>>> GetAllAsync()
         {
             var orders = await orderService.GetAllAsync();
 
@@ -34,8 +32,7 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var ordersDTO = mapper.Map<IEnumerable<OrderDTO>>(orders);
-            return Ok(ordersDTO);
+            return Ok(orders);
         }
 
         [Authorize(Policy = "Api.Read")]
@@ -49,13 +46,12 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var orderDTO = mapper.Map<OrderDTO>(order);
-            return Ok(orderDTO);
+            return Ok(order);
         }
 
         [Authorize(Policy = "Api.Read")]
         [HttpGet("GetOrderDetail/{id}")]
-        public async Task<ActionResult<OrderDTO>> GetOrderDetailByIdAsync(int id)
+        public async Task<ActionResult<OrderDetailDTO>> GetOrderDetailByIdAsync(int id)
         {
             var orderDetail = await orderDetailService.GetOrderDetailByIdAsync(id);
 
@@ -64,8 +60,7 @@ namespace GenericStore.Api.Controllers
                 return NotFound();
             }
 
-            var orderDetailDTO = mapper.Map<OrderDetailDTO>(orderDetail);
-            return Ok(orderDetailDTO);
+            return Ok(orderDetail);
         }
 
         [Authorize(Policy = "Api.Write")]
@@ -74,7 +69,7 @@ namespace GenericStore.Api.Controllers
         {
             try
             {
-                var entity = mapper.Map<Order>(orderDTO);
+                var entity = orderDTO.Adapt<Order>();
                 await orderService.CreateAsync(entity);
                 return Ok();
             }
@@ -94,7 +89,7 @@ namespace GenericStore.Api.Controllers
                 {
                     return BadRequest();
                 }
-                await orderService.UpdateAsync(orderDTO);
+                await orderService.UpdateByIdAsync(orderDTO, id);
                 return NoContent();
             }
             catch (Exception ex)

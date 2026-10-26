@@ -1,9 +1,13 @@
+using Core.CrossCutting.Middlewares;
 using GenericStore.Application.Interfaces;
 using GenericStore.Application.Services;
+using GenericStore.Domain.Enums;
 using GenericStore.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
+using System.Security.Claims;
 using System.Text;
 
 
@@ -12,9 +16,35 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// AddSwaggerGen() with SecurityDefinition and SecurityRequirement for Bearer tokens
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "GenericStore API",
+        Version = "v1"
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Introduce the JWT token: Bearer {your_token}"
+    });
+
+    options.AddSecurityRequirement(document => new Microsoft.OpenApi.OpenApiSecurityRequirement
+    {
+        [new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document)] = []
+    });
+});
+// AddSwaggerGen() with SecurityDefinition and SecurityRequirement for Bearer tokens
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", policy =>
@@ -32,7 +62,6 @@ builder.Services.AddDbContext<GenericStoreContext>(options =>
     options.UseSqlServer(connectionString));
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IStoreService, StoreService>();
@@ -70,6 +99,21 @@ builder.Services.AddAuthorizationBuilder()
     {
         policy.RequireClaim("scope", "api.write");
         policy.RequireAuthenticatedUser();
+    })
+    .AddPolicy("Role.Admin", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, RoleId.Admin.ToString());
+        policy.RequireAuthenticatedUser();
+    })
+    .AddPolicy("Role.Employee", policy =>
+     {
+         policy.RequireClaim(ClaimTypes.Role, RoleId.Employee.ToString());
+         policy.RequireAuthenticatedUser();
+     })
+    .AddPolicy("Role.Customer", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, RoleId.Customer.ToString());
+        policy.RequireAuthenticatedUser();
     });
 
 var app = builder.Build();
@@ -81,6 +125,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 
